@@ -1,0 +1,2372 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مكتبة الطلبة - متجر المستلزمات الدراسية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo img {
+            height: 50px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+        
+        .header-cart {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+        
+        .header-cart-icon {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .header-cart-icon:hover {
+            transform: scale(1.1);
+        }
+        
+        .header-cart-icon i {
+            font-size: 1.8rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-cart-count {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            background-color: var(--accent-color);
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .tabs-container {
+            width: 100%;
+            overflow-x: auto;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .tabs {
+            display: flex;
+            width: max-content;
+            padding: 0 10px;
+        }
+        
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab:hover {
+            background-color: var(--light-color);
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .tab::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-color);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .tab:hover::after {
+            transform: translateX(0);
+        }
+        
+        /* شريط البحث */
+        .search-container {
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 60px;
+            z-index: 98;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            border-radius: 30px;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus-within {
+            box-shadow: 0 0 0 2px var(--secondary-color);
+            background-color: white;
+        }
+        
+        .search-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .search-box i {
+            color: #666;
+            margin-left: 0.5rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            border: 1px solid #eee;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: var(--secondary-color);
+        }
+        
+        .product-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease, filter 0.3s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+            filter: brightness(1.05);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 2;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        .product-info {
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .product-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        
+        .product-card:hover .product-name {
+            color: var(--secondary-color);
+        }
+        
+        .product-desc {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .product-price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+        
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .product-availability {
+            color: var(--success-color);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .product-availability::before {
+            content: '✓';
+        }
+        
+        .product-rating {
+            color: var(--warning-color);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .product-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .product-tag {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        
+        .product-tag:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .add-to-cart:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .add-to-cart::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 20px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+            transition: all 0.3s;
+        }
+        
+        .add-to-cart:hover::after {
+            right: 120%;
+        }
+        
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transition: right 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 1000;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-sidebar.open {
+            right: 0;
+        }
+        
+        .cart-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .cart-header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 0;
+            width: 100%;
+            height: 20px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23ecf0f1'%3E%3C/path%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%23ecf0f1'%3E%3C/path%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23ecf0f1'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        
+        .cart-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .cart-title i {
+            color: #f1c40f;
+        }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .close-cart:hover {
+            transform: rotate(90deg);
+        }
+        
+        .cart-items {
+            padding: 1.5rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .cart-empty {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+        
+        .cart-empty i {
+            font-size: 3rem;
+            color: var(--light-color);
+            margin-bottom: 1rem;
+        }
+        
+        .cart-empty p {
+            font-size: 1.2rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .cart-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-left: 1rem;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+        
+        .cart-item:hover .cart-item-image {
+            border-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+        
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quantity-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .quantity-btn:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .remove-item {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 1.2rem;
+            align-self: flex-start;
+            transition: transform 0.3s ease;
+        }
+        
+        .remove-item:hover {
+            transform: rotate(15deg) scale(1.2);
+        }
+        
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+            background-color: #f9f9f9;
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--success-color), #2ecc71);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .checkout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+        }
+        
+        .checkout-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .checkout-btn:hover::after {
+            right: 100%;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Lightbox for image zoom */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            animation: zoomIn 0.3s ease;
+        }
+        
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 5px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            border: 5px solid white;
+        }
+        
+        .close-lightbox {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .close-lightbox:hover {
+            transform: rotate(90deg);
+        }
+        
+        /* Floating cart icon */
+        .floating-cart {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-color), #c0392b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+            cursor: pointer;
+            z-index: 99;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        .floating-cart:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6);
+        }
+        
+        .floating-cart-count {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Floating whatsapp button */
+        .floating-whatsapp {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            z-index: 99;
+            transition: all 0.3s ease;
+        }
+        
+        .floating-whatsapp:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
+        }
+        
+        /* Floating back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 170px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+            cursor: pointer;
+            z-index: 99;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-top:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.6);
+        }
+        
+        .back-to-top.active {
+            display: flex;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification i {
+            font-size: 1.5rem;
+        }
+        
+        /* Ribbon for special offers */
+        .ribbon {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            width: 120px;
+            height: 30px;
+            background-color: var(--accent-color);
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            gap: 0.5rem;
+        }
+        
+        .page-btn {
+            padding: 0.5rem 1rem;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .page-btn:hover {
+            background-color: var(--light-color);
+        }
+        
+        .page-btn.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        .product-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .bounce {
+            animation: bounce 0.8s;
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .heart {
+            color: #e74c3c;
+            animation: pulse 1s infinite;
+            display: inline-block;
+        }
+        
+        /* Special offer animation */
+        .special-offer {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .special-offer::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0) 45%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0) 55%
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .cart-sidebar {
+                width: 90%;
+                right: -90%;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 1rem 0.5rem;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .logo img {
+                height: 40px;
+            }
+            
+            .floating-cart,
+            .floating-whatsapp,
+            .back-to-top {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .floating-cart {
+                bottom: 80px;
+                right: 20px;
+            }
+            
+            .floating-whatsapp {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .back-to-top {
+                bottom: 140px;
+                right: 20px;
+            }
+            
+            .tab {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .pagination {
+                flex-wrap: wrap;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .tab {
+                padding: 0.7rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            
+            .page-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="https://i.postimg.cc/x1Xncp9W/logo.png" alt="مكتبة الطلبة">
+            <span>مكتبة الطلبة</span>
+        </div>
+        <div class="header-cart">
+            <div class="header-cart-icon" id="header-cart-icon">
+                <i class="fas fa-shopping-basket"></i>
+                <span class="header-cart-count" id="header-cart-count">0</span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="tabs-container">
+        <div class="tabs">
+            <div class="tab active" data-category="all">الكل</div>
+            <div class="tab" data-category="student">مستلزمات طلابية</div>
+            <div class="tab" data-category="office">أدوات مكتبية</div>
+            <div class="tab" data-category="games">ألعاب</div>
+            <div class="tab" data-category="engineering">أدوات هندسية</div>
+            <div class="tab" data-category="lab">أدوات معملية</div>
+            <div class="tab" data-category="art">أدوات رسم</div>
+        </div>
+    </div>
+    
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="ابحث عن منتج...">
+            <i class="fas fa-search"></i>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="products-grid" id="products-container">
+            <!-- سيتم ملؤها بالمنتجات عبر JavaScript -->
+        </div>
+        
+        <div class="pagination" id="pagination">
+            <!-- سيتم ملؤها بأزرار الصفحات عبر JavaScript -->
+        </div>
+    </div>
+    
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3 class="cart-title"><i class="fas fa-shopping-basket"></i> سلة التسوق</h3>
+            <button class="close-cart" id="close-cart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <!-- سيتم ملؤها بالعناصر المضافة إلى السلة -->
+        </div>
+        <div class="cart-footer">
+            <button class="checkout-btn" id="checkout-btn">
+                <i class="fab fa-whatsapp"></i>
+                إتمام الشراء عبر واتساب
+            </button>
+        </div>
+    </div>
+    
+    <!-- Floating buttons -->
+    <div class="floating-cart" id="floating-cart">
+        <i class="fas fa-shopping-basket"></i>
+        <span class="floating-cart-count" id="floating-cart-count">0</span>
+    </div>
+    
+    <div class="floating-whatsapp" id="floating-whatsapp">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+    
+    <div class="back-to-top" id="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Lightbox for image zoom -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <span class="close-lightbox"><i class="fas fa-times"></i></span>
+            <img id="lightbox-image" src="" alt="">
+        </div>
+    </div>
+    
+    <script>
+        // بيانات المنتجات
+        const products = [
+            {
+            id: 1,
+            name: "قلم هايلايتر",
+            price: 30,
+            desc: "قلم هايلايتر جودة عالية ",
+            image: "https://i.postimg.cc/xTfBwVKQ/image.jpg",
+            category: "student",
+            tags: ["أدوات مكتبية", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+            {
+            id: 2,
+            name: "علبة أدوات هندسية",
+            price: 45,
+            desc: "علبة أدوات هندسية 7 قطع ",
+            image: "https://i.postimg.cc/gJyB7gjr/image.jpg",
+            badge: "جديد",
+            category: "student",
+            tags: ["أدوات هندسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 3,
+            name: "علبة أدوات هندسية",
+            price: 45,
+            desc: "علبة أدوات هندسية 7 قطع .",
+            image: "https://i.postimg.cc/m2g6dNs2/2.jpg",
+            category: "student",
+            tags: ["أدوات هندسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 4,
+            name: "علبة أدوات هندسية compass ",
+            price: 115,
+            desc: "علبة أدوات هندسية جودة عالية.",
+            image: "https://i.postimg.cc/zD0xRbgm/115.jpg",
+            badge: "عرض خاص",
+            category: "student",
+            tags: ["أدوات هندسية", "عرض خاص"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 5,
+            name: "علبة أدوات هندسية",
+            price: 115,
+            desc: "علبة أدوات هندسية عالية الجودة",
+            image: "https://i.postimg.cc/DZcB6mpX/115.jpg",
+            category: "student",
+            tags: ["أدوات هندسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 6,
+            name: "علبة أدوات هندسية بلاستيك ",
+            price:45,
+            desc: "علبة أدوات هندسية عالية الجودة",
+            image: "https://i.postimg.cc/yNHmGsZX/image.jpg",
+            category: "student",
+            tags: ["أدوات هندسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 7,
+            name: "علبة ادوات هندسية مارشال",
+            price:45,
+            desc: "علبة أدوات  عالية الجودة",
+            image: "https://i.postimg.cc/tRZ5vXSw/image.jpg",
+            category: "student",
+            tags: ["أدوات هندسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 8,
+            name: "علبة ادوات هندسية عادية ",
+            price:20,
+            desc: "علبة أدوات  عالية الجودة",
+            image: "https://i.postimg.cc/fRKjSkyt/image.jpg",
+            category: "student",
+            tags: ["أدوات هندسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 9,
+            name: "برجل",
+            price:30,
+            desc: "برجل سنون ",
+            image: "https://i.postimg.cc/DZWqNggL/image.jpg",
+            category: "student",
+            tags: ["أدوات هندسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+         {
+            id: 10,
+            name: "مقص أطفال",
+            price:15,
+            desc: "مقص أمن للأطفال  ",
+            image: "https://i.postimg.cc/8ztMP3XL/image.jpg",
+            category: "student",
+            tags: ["أدوات مدرسية", "أطفال"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 11,
+            name: "جليتر لميع ",
+            price:10,
+            desc: " جليتر لميع   ",
+            image: "https://i.postimg.cc/q7FK2KTR/image.jpg",
+            category: "student",
+            tags: ["أدوات فنية", "زينة"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 12,
+            name: "مسطرة معدن  ",
+            price:20,
+            desc: "  مسطرة معدن 30 سم   ",
+            image: "https://i.postimg.cc/02rh5RNq/image.jpg",
+            category: "student",
+            tags: ["أدوات هندسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 13,
+            name: "قلم رصاص سنون 0.70 ",
+            price:20,
+            desc: "  قلم رصاص سنون 0.70    ",
+            image: "https://i.postimg.cc/V613zJJ7/0-7.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 14,
+            name: "   قلم جاف 4 لون. ",
+            price:25,
+            desc: "  قلم جلف 4 لون شفاف",
+            image: "https://i.postimg.cc/s2JT9w2c/4.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 15,
+            name: "   قلم جاف 4 لون. ",
+            price:25,
+            desc: " قلم جلف 4 لون أسود",
+            image: "https://i.postimg.cc/7Y1YV4qy/4-4.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 16,
+            name: "   قلم جاف 4 لون. ",
+            price:25,
+            desc: " قلم جلف 4 لون مشكل",
+            image: "https://i.postimg.cc/RhChJCDd/4.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 17,
+            name: " صلصال فوم ",
+            price:35 ,
+            desc: "صلصال فوم متوسط ",
+            image: "https://i.postimg.cc/vZnYB6mM/image.jpg",
+            category: "games",
+            tags: ["ألعاب", "أطفال"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 18,
+            name: " صلصال فوم ",
+            price:40 ,
+            desc: "صلصال فوم كبير ",
+            image: "https://i.postimg.cc/vZnYB6mM/image.jpg",
+            category: "games",
+            tags: ["ألعاب", "أطفال"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 19,
+            name: " لعبة تجميع أِشكال ",
+            price:100 ,
+            desc: "  لعبة تجميع أشكال ",
+            image: "https://i.postimg.cc/tgSpvdS3/image.jpg",
+            category: "games",
+            tags: ["ألعاب", "تعليمية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 20,
+            name: " كارت عربيات صغيرة   ",
+            price:250 ,
+            desc: "   كارت عربيات صغيرة ",
+            image: "https://i.postimg.cc/V6J1xSp3/image.jpg",
+            category: "games",
+            tags: ["ألعاب", "سيارات"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 21,
+            name: " إزازة مياه   ",
+            price:120 ,
+            desc: "  إزازة مياه",
+            image: "https://i.postimg.cc/HLxCMcYV/image.jpg",
+            category: "student",
+            tags: ["أدوات مدرسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 22,
+            name: " مج حرارى  ",
+            price:165 ,
+            desc: " مج حرارى",
+            image: "https://i.postimg.cc/JnHVTfB8/image.jpg",
+            category: "student",
+            tags: ["أدوات مدرسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 23,
+            name: "بوتيل مياه  ",
+            price:140 ,
+            desc: "  بوتيل مياه",
+            image: "https://i.postimg.cc/L6qdmY9T/image.jpg",
+            category: "student",
+            tags: ["أدوات مدرسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 24,
+            name: " خلاط عصير  ",
+            price:200 ,
+            desc: "   خلاط عصير",
+            image: "https://i.postimg.cc/ncNyrFMt/image.jpg",
+            category: "student",
+            tags: ["أدوات منزلية", "مطبخ"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 25,
+            name: " بوتيل مياه شفاف ",
+            price:155 ,
+            desc: "   بوتيل مياه شفاف",
+            image: "https://i.postimg.cc/3Rr6VWf2/image.jpg",
+            category: "student",
+            tags: ["أدوات مدرسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 26,
+            name: " كارت مسدسات كبير",
+            price:90 ,
+            desc: "   كارت مسدسات كبير",
+            image: "https://i.postimg.cc/kMpZYJQt/image.jpg",
+            category: "games",
+            tags: ["ألعاب", "أطفال"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 27,
+            name: "   مقلمة 1",
+            price:90 ,
+            desc: "  متوفر جميع الألوان",
+            image: "https://i.postimg.cc/1RbSncYT/1.jpg",
+            category: "student",
+            tags: ["أدوات مدرسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 28,
+            name: "   مقلمة 2",
+            price:50 ,
+            desc: "  متوفر جميع الألوان",
+            image: "https://i.postimg.cc/4NG8SYKy/2.jpg",
+            category: "student",
+            tags: ["أدوات مدرسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 29,
+            name: "   مقلمة 3",
+            price:100 ,
+            desc: "  متوفر جميع الألوان",
+            image: "https://i.postimg.cc/3wk9vpqS/3.jpg",
+            category: "student",
+            tags: ["أدوات مدرسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 30,
+            name: "   مقلمة 4",
+            price:100 ,
+            desc: "  متوفر جميع الألوان",
+            image: "https://i.postimg.cc/tJkFfCfn/4.jpg",
+            category: "student",
+            tags: ["أدوات مدرسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 31,
+            name: "تجميع حروف ",
+            price:120 ,
+            desc: " لعبة تعليمية ",
+            image: "https://i.postimg.cc/5N9BzLYB/image.jpg",
+            category: "games",
+            tags: ["ألعاب", "تعليمية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 32,
+            name: "تجميع أشكال ",
+            price:120 ,
+            desc: " لعبة تعليمية ",
+            image: "https://i.postimg.cc/43p7qxH4/image.jpg",
+            category: "games",
+            tags: ["ألعاب", "تعليمية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 33,
+            name: "باشورة سبورة",
+            price:15 ,
+            desc: " باشورة سبورة ",
+            image: "https://i.postimg.cc/mDwcZpS0/image.jpg",
+            category: "student",
+            tags: ["أدوات مدرسية", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 34,
+            name: " قلم حبر راندى شفاف",
+            price:25 ,
+            desc: "   أقلام حبر راندى ",
+            image: "https://i.postimg.cc/sD8M2hpD/0-5.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },  
+        {
+            id: 35,
+            name: " قلم راندى ",
+            price:20 ,
+            desc: "   أقلام حبر راندى ",
+            image: "https://i.postimg.cc/xCx0Fw5T/image.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },  
+        {
+            id: 36,
+            name: " أستيكة سحاب",
+            price:30 ,
+            desc: "   أستيكة سحاب   ",
+            image: "https://i.postimg.cc/zvzx3MYW/image.jpg",
+            category: "student",
+            tags: ["قرطاسية", "أدوات مكتبية"],
+            availability: "متوفر",
+            rating: 5
+        }, 
+        {
+            id: 37,
+            name: "  أقلام رصاص دومس",
+            price:80 ,
+            desc: "  دستة أقلام رصاص دومس   ",
+            image: "https://i.postimg.cc/j2342SX0/image.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        }, 
+        {
+            id: 38,
+            name: "    مضرب راكيت كبير",
+            price:85 ,
+            desc: " مضرب راكيت كبير  ",
+            image: "https://i.postimg.cc/G254s8ZQ/image.jpg",
+            category: "games",
+            tags: ["رياضة", "ألعاب"],
+            availability: "متوفر",
+            rating: 5
+        }, 
+        {
+            id: 39,
+            name: "    مضرب راكيت صغير",
+            price:70 ,
+            desc: " مضرب راكيت صغير  ",
+            image: "https://i.postimg.cc/bNXQ6WBR/image.jpg",
+            category: "games",
+            tags: ["رياضة", "ألعاب"],
+            availability: "متوفر",
+            rating: 5
+        }, 
+        {
+            id: 40,
+            name: "    مضرب بينج بونج كبير",
+            price:100 ,
+            desc: " مضرب بينج بونج كبير  ",
+            image: "https://i.postimg.cc/rpY45P4x/image.jpg",
+            category: "games",
+            tags: ["رياضة", "ألعاب"],
+            availability: "متوفر",
+            rating: 5
+        },  
+        {
+            id: 41,
+            name: "    مضرب بينج بونج صغير",
+            price:70 ,
+            desc: " مضرب بينج بونج صغير  ",
+            image: "https://i.postimg.cc/j5w7c469/image.jpg",
+            category: "games",
+            tags: ["رياضة", "ألعاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 42,
+            name: "  سلايم صغير  ",
+            price:5 ,
+            desc: "   سلايم صغير   ",
+            image: "https://i.postimg.cc/28FB06vz/5.jpg",
+            category: "games",
+            tags: ["ألعاب", "أطفال"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 43,
+            name: "  مكنة تغليف حرارى Mg ",
+            price:1450 ,
+            desc: "  مكنة تغليف حرارى MG   ",
+            image: "https://i.postimg.cc/Y9WvYqMB/image.jpg",
+            category: "office",
+            tags: ["أدوات مكتبية", "معدات"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 44,
+            name: " سلايم كبير ",
+            price: 25,
+            desc: " سلايم أطفال  ",
+            image: "https://i.postimg.cc/bJxkf1Ld/Whats-App-Image-2025-06-25-at-8-44-10-AM.jpg",
+            badge: "جديد",
+            category: "student",
+            tags: ["ألعاب", "أطفال"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 45,
+            name: " سلايم  ",
+            price: 12.5,
+            desc: " سلايم أطفال  ",
+            image: "https://i.postimg.cc/B6b9dCJB/11.jpg",
+            badge: "جديد",
+            category: "student",
+            tags: ["ألعاب", "أطفال"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 46,
+            name: " شنطة دروس   ",
+            price: 50,
+            desc: "  شنطة دروس أطفال  ",
+            image: "https://i.postimg.cc/KvzfBsJN/Whats-App-Image-2025-06-25-at-8-44-15-AM-1.jpg",
+            badge: "جديد",
+            category: "student",
+            tags: ["أدوات مدرسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 47,
+            name: " شنطة دروس بحامل   ",
+            price:60 ,
+            desc: "    شنطة دروس  ",
+            image: "https://i.postimg.cc/0yGzQ9DH/2.jpg",
+            category: "student",
+            tags: ["أدوات مدرسية", "طلاب"],
+            availability: "متوفر",
+            rating: 5
+        }, 
+        {
+            id: 48,
+            name: "   قلم جاف روتو ليكويد   ",
+            price:5 ,
+            desc: "    أقلام جاف   ",
+            image: "https://i.postimg.cc/DZzVGPDb/11.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 49,
+            name: "   قلم جاف  بريما برونز   ",
+            price:7.5 ,
+            desc: "    أقلام جاف   ",
+            image: "https://i.postimg.cc/bNmmDjPL/11.png",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 50,
+            name: "   قلم جاف  بريما جينتا   ",
+            price:5 ,
+            desc: "    أقلام جاف   ",
+            image: "https://i.postimg.cc/FHssp32N/image.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 51,
+            name: "   أقلام جاف  بريما6 ألوان   ",
+            price:25 ,
+            desc: "    أقلام جاف   ",
+            image: "https://i.postimg.cc/QdysqPQJ/8.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 52,
+            name: "   أقلام جاف  5 ألوان   ",
+            price:20 ,
+            desc: "    أقلام جاف   ",
+            image: "https://i.postimg.cc/bv9gPXmQ/2021082813091882512555.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 53,
+            name: "   قلم جاف روتو رابيد   ",
+            price:7.5 ,
+            desc: "    أقلام جاف   ",
+            image: "https://i.postimg.cc/7h9f9knZ/image.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 55,
+            name: "   قلم حبر pos   ",
+            price:10 ,
+            desc: "    أقلام جاف   ",
+            image: "https://i.postimg.cc/s2Jxszb9/qlm-jaf-azrq-albws-0-1728041651807.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 56,
+            name: "  قلم تركى بينسان    ",
+            price:10 ,
+            desc: "    أقلام جاف   ",
+            image: "https://i.postimg.cc/DZFC4rj3/888.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 57,
+            name: "  قلم فابريكاسيل رصاص    ",
+            price:10 ,
+            desc: "    أقلام رصاص   ",
+            image: "https://i.postimg.cc/nVTDJ4q9/2030400006195.webp",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 58,
+            name: "  أستيكة فابريكاسيل صغيرة    ",
+            price:12.5 ,
+            desc: "     أستيكة   ",
+            image: "https://i.postimg.cc/KYHmfYTz/image-1024.jpg",
+            category: "student",
+            tags: ["قرطاسية", "أدوات مكتبية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 59,
+            name: "  أستيكة فابريكاسيل كبيرة    ",
+            price:17.5 ,
+            desc: "     أستيكة   ",
+            image: "https://i.postimg.cc/KYHmfYTz/image-1024.jpg",
+            category: "student",
+            tags: ["قرطاسية", "أدوات مكتبية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 60,
+            name: "  أقلام هايلايتر  mg ",
+            price:20 ,
+            desc: "  أقلام تحديد  ",
+            image: "https://i.postimg.cc/Qt7kxHkK/577.png",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+        {
+            id: 61,
+            name: "  أقلام جيل ألوان  mg ",
+            price:15 ,
+            desc: "  أقلام mg  ",
+            image: "https://i.postimg.cc/kGXQNfPK/888.jpg",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+           {
+            id: 62,
+            name: "  عرض كراسات تلوين   ",
+            price:50 ,
+            desc: "  عرض كراسات التلوين ( 6 كراسات تلوين + علبة الوان خشب )  ",
+            image: "https://i.postimg.cc/s2RNDRYk/Whats-App-Image-2025-06-30-at-11-31-32-AM-removebg-preview-1.png",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+            {
+            id: 64,
+            name: "فواصل  ",
+            price:0 ,
+            desc: "  فواصل كتب ",
+            image: "https://i.postimg.cc/Xvj7Gt3P/Whats-App-Image-2025-06-26-at-11-55-29-AM-removebg-preview.png",
+            category: "student",
+            tags: ["أقلام", "قرطاسية"],
+            availability: "متوفر",
+            rating: 5
+        },
+            {
+                id: 65,
+                name: "علبة ألوان دومس خشبية 12 لون ",
+                price: 35,
+                desc: "  علبة ألوان خشبية عالية الجودة، 12 لون قصيرة",
+                image: "https://i.postimg.cc/tJN2yxYZ/1.webp",
+                category: "art",
+                tags: ["ألوان", "رسم"],
+                availability: "متوفر",
+                rating: 5,
+                specialOffer: false
+            },
+            {
+                id: 66,
+                name: "علبة ألوان دومس خشبية 12 لون طويلة ",
+                price: 35,
+                desc: "  علبة ألوان خشبية عالية 12 لون ",
+                image: "https://i.postimg.cc/pV0tDh0X/1.jpg",
+                category: "art",
+                tags: ["ألوان", "رسم"],
+                availability: "متوفر",
+                rating: 5,
+                specialOffer: false
+            },
+            {
+                id: 67,
+                name: "آلة حاسبة علمية كاسيو ",
+                price: 120,
+                desc: "آلة حاسبة علمية متقدمةأصلى تايلاندى ",
+                image: "https://i.postimg.cc/Nj3J6Bq0/111.webp",
+                category: "student",
+                tags: ["إلكترونيات", "رياضيات"],
+                availability: "متوفر",
+                rating: 5,
+                specialOffer: true
+            },
+            {
+                id: 68,
+                name: "بيكر معمل ",
+                price: 350,
+                desc: "بيكر معمل متوفر جميع المقاسات ",
+                image: "https://i.postimg.cc/CxhPJmd3/Chemistry-Beaker-Laboratory-Glass-Beaker-Glass-250-Ml-Glass-Beaker-2000-Ml-Capacity.avif",
+                category: "lab",
+                tags: ["معمل", "علوم"],
+                availability: "متوفر",
+                rating: 5,
+                specialOffer: true
+            },
+           
+            {
+                id: 69,
+                name: "أقلامmg  تلوين خشبية 24 لون",
+                price: 60,
+                desc: "علبة أقلام تلوين خشبية عالية الجودة",
+                image: "https://i.postimg.cc/7hX7LMDz/1.jpg",
+                category: "art",
+                tags: ["ألوان", "رسم"],
+                availability: "متوفر",
+                rating: 5,
+                specialOffer: false
+            },
+            {
+                id: 70,
+                name: "دفتر رسم كانسون 25 * 35 ",
+                price: 30,
+                desc: "دفتر رسم مقاس 25 * 35  ",
+                image: "https://i.postimg.cc/3Nr4z4px/1.png",
+                category: "art",
+                tags: ["دفاتر", "رسم"],
+                availability: "متوفر",
+                rating: 5,
+                specialOffer: false
+            },
+            {
+                id: 71,
+                name: "مسدس شمع",
+                price: 25,
+                desc: "مسدس شمع لاصق للاستخدام المكتبي",
+                image: "https://i.postimg.cc/MH4BRZMZ/1476233867.webp",
+                category: "office",
+                tags: ["أدوات مكتبية"],
+                availability: "متوفر",
+                rating: 5,
+                specialOffer: false
+            },
+            {
+                id: 72,
+                name: "ألوان مائية 12 لون",
+                price: 75,
+                desc: "علبة ألوان مائية عالية الجودة",
+                image: "https://i.postimg.cc/76wnYL7p/Whats-App-Image-2025-06-30-at-7-09-20-PM.jpg",
+                category: "art",
+                tags: ["ألوان", "رسم"],
+                availability: "متوفر",
+                rating: 5,
+                specialOffer: false
+            },
+  
+            {
+                id: 73,
+                name: "دباسة مكتبية",
+                price: 45,
+                desc: "دباسة مكتبية عالية الجودة",
+                image: "https://i.postimg.cc/KzDQnTxG/Whats-App-Image-2025-05-03-at-12-52-41-PM.jpg",
+                category: "office",
+                tags: ["أدوات مكتبية"],
+                availability: "متوفر",
+                rating: 5,
+                specialOffer: false
+            },
+            {
+                id: 74,
+                name: "كرة قدم مكسة ",
+                price: 55,
+                desc: "كرة قدم  ",
+                image: "https://i.postimg.cc/HsgdWDPb/97d359-b92d8b89d95c4dcaad4f5c52d7f5160d-mv2.avif",
+                category: "games",
+                tags: ["رياضة", "ألعاب"],
+                availability: "متوفر",
+                rating: 5,
+                specialOffer: false
+            },
+            {
+                id: 75,
+                name: "مسطرة روترنج 80 سم ",
+                price: 12,
+                desc: " مسطرة روترنج 80 سم ",
+                image: "https://i.postimg.cc/KvWXK609/d9-Sa-Kjad8yulcwips2-PTn9-M1-WZSl-XM8-GBBmci-KCH.jpg",
+                category: "engineering",
+                tags: ["أدوات هندسية"],
+                availability: "متوفر",
+                rating: 5,
+                specialOffer: false
+            },
+      
+        ];
+        
+        // عناصر DOM
+        const productsContainer = document.getElementById('products-container');
+        const tabs = document.querySelectorAll('.tab');
+        const headerCartIcon = document.getElementById('header-cart-icon');
+        const headerCartCount = document.getElementById('header-cart-count');
+        const floatingCart = document.getElementById('floating-cart');
+        const floatingCartCount = document.getElementById('floating-cart-count');
+        const floatingWhatsapp = document.getElementById('floating-whatsapp');
+        const backToTop = document.getElementById('back-to-top');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const closeCart = document.getElementById('close-cart');
+        const overlay = document.getElementById('overlay');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        const closeLightbox = document.querySelector('.close-lightbox');
+        const searchInput = document.getElementById('search-input');
+        const paginationContainer = document.getElementById('pagination');
+        
+        // سلة التسوق
+        let cart = [];
+        
+        // متغيرات التقسيم إلى صفحات
+        let currentPage = 1;
+        const productsPerPage = 10;
+        let currentCategory = 'all';
+        let currentSearchQuery = '';
+        
+        // عرض المنتجات مع التقسيم إلى صفحات
+        function displayProducts(category = 'all', searchQuery = '', page = 1) {
+            productsContainer.innerHTML = '';
+            paginationContainer.innerHTML = '';
+            
+            let filteredProducts = category === 'all' 
+                ? products 
+                : products.filter(product => product.category === category);
+            
+            // تطبيق البحث إذا كان هناك نص بحث
+            if (searchQuery) {
+                searchQuery = searchQuery.toLowerCase();
+                filteredProducts = filteredProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchQuery) ||
+                    product.desc.toLowerCase().includes(searchQuery) ||
+                    product.tags.some(tag => tag.toLowerCase().includes(searchQuery))
+                );
+            }
+            
+            // حساب عدد الصفحات
+            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+            
+            // تحديد المنتجات للصفحة الحالية
+            const startIndex = (page - 1) * productsPerPage;
+            const endIndex = Math.min(startIndex + productsPerPage, filteredProducts.length);
+            const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+            
+            // عرض المنتجات للصفحة الحالية
+            paginatedProducts.forEach((product, index) => {
+                const productCard = document.createElement('div');
+                productCard.className = `product-card ${product.specialOffer ? 'special-offer' : ''}`;
+                productCard.style.animationDelay = `${index * 0.1}s`;
+                
+                let ribbon = '';
+                if (product.specialOffer) {
+                    ribbon = '<div class="ribbon">عرض خاص</div>';
+                }
+                
+                productCard.innerHTML = `
+                    ${ribbon}
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" data-src="${product.image}">
+                        ${product.availability === 'متوفر' ? '<span class="product-badge">متوفر</span>' : ''}
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-desc">${product.desc}</p>
+                        <div class="product-meta">
+                            <span class="product-availability">${product.availability}</span>
+                            <span class="product-rating">
+                                ${'★'.repeat(product.rating)}${'☆'.repeat(5 - product.rating)}
+                            </span>
+                        </div>
+                        <div class="product-tags">
+                            ${product.tags.map(tag => `<span class="product-tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="product-price">السعر عند الطلب</div>
+                        <button class="add-to-cart" data-id="${product.id}">
+                            <i class="fas fa-cart-plus"></i>
+                            أضف للسلة
+                        </button>
+                    </div>
+                `;
+                productsContainer.appendChild(productCard);
+            });
+            
+            // إنشاء أزرار الصفحات
+            if (totalPages > 1) {
+                const paginationDiv = document.createElement('div');
+                paginationDiv.className = 'pagination';
+                
+                // زر الصفحة السابقة
+                const prevButton = document.createElement('button');
+                prevButton.className = `page-btn ${page === 1 ? 'disabled' : ''}`;
+                prevButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                prevButton.addEventListener('click', () => {
+                    if (page > 1) {
+                        displayProducts(category, searchQuery, page - 1);
+                        currentPage = page - 1;
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+                paginationDiv.appendChild(prevButton);
+                
+                // أزرار الصفحات
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.className = `page-btn ${i === page ? 'active' : ''}`;
+                    pageButton.textContent = i;
+                    pageButton.addEventListener('click', () => {
+                        displayProducts(category, searchQuery, i);
+                        currentPage = i;
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                    paginationDiv.appendChild(pageButton);
+                }
+                
+                // زر الصفحة التالية
+                const nextButton = document.createElement('button');
+                nextButton.className = `page-btn ${page === totalPages ? 'disabled' : ''}`;
+                nextButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                nextButton.addEventListener('click', () => {
+                    if (page < totalPages) {
+                        displayProducts(category, searchQuery, page + 1);
+                        currentPage = page + 1;
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+                paginationDiv.appendChild(nextButton);
+                
+                paginationContainer.appendChild(paginationDiv);
+            }
+            
+            // إضافة حدث النقر على أزرار "أضف للسلة"
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', addToCart);
+            });
+            
+            // إضافة حدث النقر على الصور لتكبيرها
+            document.querySelectorAll('.product-image img').forEach(img => {
+                img.addEventListener('click', openLightbox);
+            });
+        }
+        
+        // فتح Lightbox لتكبير الصورة
+        function openLightbox(e) {
+            const imgSrc = e.target.getAttribute('data-src') || e.target.src;
+            lightboxImage.src = imgSrc;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // إغلاق Lightbox
+        function closeLightboxHandler() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // إضافة منتج إلى السلة
+        function addToCart(e) {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            const product = products.find(p => p.id === productId);
+            
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            showCartNotification(product.name);
+            
+            // تأثير bounce للسلة
+            headerCartIcon.classList.add('bounce');
+            floatingCart.classList.add('bounce');
+            setTimeout(() => {
+                headerCartIcon.classList.remove('bounce');
+                floatingCart.classList.remove('bounce');
+            }, 800);
+        }
+        
+        // تحديث عرض السلة
+        function updateCart() {
+            cartItemsContainer.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fas fa-shopping-basket"></i>
+                        <p>السلة فارغة</p>
+                    </div>
+                `;
+                headerCartCount.textContent = '0';
+                floatingCartCount.textContent = '0';
+                return;
+            }
+            
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-image">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div class="cart-item-details">
+                        <h4 class="cart-item-name">${item.name}</h4>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn decrease" data-id="${item.id}">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn increase" data-id="${item.id}">+</button>
+                        </div>
+                    </div>
+                    <button class="remove-item" data-id="${item.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+            });
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            headerCartCount.textContent = totalItems;
+            floatingCartCount.textContent = totalItems;
+            
+            // تأثير النبض عند تحديث السلة
+            headerCartCount.classList.add('pulse');
+            floatingCartCount.classList.add('pulse');
+            setTimeout(() => {
+                headerCartCount.classList.remove('pulse');
+                floatingCartCount.classList.remove('pulse');
+            }, 500);
+            
+            // إضافة أحداث النقر على أزرار الكمية والإزالة
+            document.querySelectorAll('.decrease').forEach(button => {
+                button.addEventListener('click', decreaseQuantity);
+            });
+            
+            document.querySelectorAll('.increase').forEach(button => {
+                button.addEventListener('click', increaseQuantity);
+            });
+            
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', removeFromCart);
+            });
+        }
+        
+        // تقليل كمية المنتج
+        function decreaseQuantity(e) {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            const item = cart.find(item => item.id === productId);
+            
+            if (item.quantity > 1) {
+                item.quantity -= 1;
+            } else {
+                cart = cart.filter(item => item.id !== productId);
+            }
+            
+            updateCart();
+        }
+        
+        // زيادة كمية المنتج
+        function increaseQuantity(e) {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            const item = cart.find(item => item.id === productId);
+            item.quantity += 1;
+            updateCart();
+        }
+        
+        // إزالة منتج من السلة
+        function removeFromCart(e) {
+            const productId = parseInt(e.target.closest('.remove-item').getAttribute('data-id'));
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        }
+        
+        // إظهار إشعار عند إضافة منتج
+        function showCartNotification(productName) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                تمت إضافة "${productName}" إلى السلة
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // إظهار الإشعار
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // إخفاء الإشعار بعد 3 ثواني
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 400);
+            }, 3000);
+        }
+        
+        // إرسال الطلب عبر واتساب
+        function sendWhatsAppOrder() {
+            if (cart.length === 0) {
+                showAlert('السلة فارغة', 'يرجى إضافة منتجات أولاً', 'error');
+                return;
+            }
+            
+            // إنشاء رسالة الطلب
+            let message = `🎉 *طلب جديد من متجر مكتبة الطلبة* 🎉\n\n`;
+            message += `📋 *تفاصيل الطلب:*\n`;
+            message += '────────────────\n';
+            
+            cart.forEach((item, index) => {
+                message += `${index + 1}. *${item.name}*\n`;
+                message += `   - الكمية: ${item.quantity}\n`;
+                message += `   - رابط الصورة: ${item.image}\n`;
+                message += '────────────────\n';
+            });
+            
+            message += `شكراً لثقتكم بنا ❤️\n`;
+            message += `سيتم التواصل معكم قريباً لتأكيد الطلب\n`;
+            message += `📚 *مكتبة الطلبة* 📚\n`;
+            
+            const phoneNumber = '+2001097670474';
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
+        
+        // عرض تنبيه
+        function showAlert(title, message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i>
+                <div>
+                    <strong>${title}</strong>
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // إظهار الإشعار
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // إخفاء الإشعار بعد 3 ثواني
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 400);
+            }, 3000);
+        }
+        
+        // أحداث DOM
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const category = tab.getAttribute('data-category');
+                currentCategory = category;
+                currentPage = 1;
+                displayProducts(category, currentSearchQuery, currentPage);
+                
+                // تأثير النقر على التبويب
+                tab.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    tab.style.transform = 'scale(1)';
+                }, 200);
+            });
+        });
+        
+        // حدث البحث
+        searchInput.addEventListener('input', () => {
+            currentSearchQuery = searchInput.value;
+            currentPage = 1;
+            displayProducts(currentCategory, currentSearchQuery, currentPage);
+        });
+        
+        headerCartIcon.addEventListener('click', () => {
+            cartSidebar.classList.add('open');
+            overlay.classList.add('active');
+        });
+        
+        floatingCart.addEventListener('click', () => {
+            cartSidebar.classList.add('open');
+            overlay.classList.add('active');
+        });
+        
+        floatingWhatsapp.addEventListener('click', () => {
+            if (cart.length > 0) {
+                sendWhatsAppOrder();
+            } else {
+                showAlert('السلة فارغة', 'يرجى إضافة منتجات أولاً', 'error');
+            }
+        });
+        
+        closeCart.addEventListener('click', () => {
+            cartSidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        overlay.addEventListener('click', () => {
+            cartSidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+        
+        checkoutBtn.addEventListener('click', sendWhatsAppOrder);
+        
+        closeLightbox.addEventListener('click', closeLightboxHandler);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                closeLightboxHandler();
+            }
+        });
+        
+        // إظهار/إخفاء زر العودة للأعلى
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        });
+        
+        // العودة للأعلى عند النقر على الزر
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // إغلاق Lightbox عند الضغط على زر Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightboxHandler();
+            }
+        });
+        
+        // تهيئة الصفحة
+        displayProducts();
+    </script>
+</body>
+</html>
